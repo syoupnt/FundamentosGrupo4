@@ -8,3 +8,5 @@ def TieneUnPuntoCom(correo):
         val = False
 
     return val
+def tiene_un_arroba(correo):
+    return correo.count('@') == 1
