@@ -4,7 +4,13 @@ Este repositorio contiene una pequeña aplicación en Python para simular el reg
 
 ## Estructura del repositorio
 
-- `main.py`: programa principal con la lógica del sistema
+- `main.py`: punto de entrada del programa
+- `menu.py`: menú principal y control de opciones
+- `expedientes.py`: registro, consulta, actualización y reportes
+- `validaciones.py`: validación de DNI, teléfono, correo y nombre
+- `entradas.py`: solicitudes seguras por consola
+- `almacenamiento.py`: carga y guardado de expedientes en JSON
+- `colores.py`: códigos de formato para la consola
 - `pseudocodigo/`: versión en pseudocódigo del algoritmo, en formato `.psc`
 
 ## Cómo ejecutar
