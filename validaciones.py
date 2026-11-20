@@ -11,7 +11,7 @@ def es_solo_numeros(cadena_texto):
 
 def validar_dni(dni):
     """El DNI debe contener exactamente 8 dígitos."""
-    
+
     return len(dni) == 8 and es_solo_numeros(dni)
 
 
@@ -58,7 +58,7 @@ def validar_correo(correo):
     return len(extension) >= 2 and extension.isalpha()
 
 
-def validar_telefono(telefono):
+def validar_telefono(telefono): 
     """Valida un número de celular de 9 dígitos."""
     return len(telefono) == 9 and es_solo_numeros(telefono)
 
