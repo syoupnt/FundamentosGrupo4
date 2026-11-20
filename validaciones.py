@@ -1,8 +1,9 @@
 import re
 
-
+# es solo numeros
 def es_solo_numeros(cadena_texto):
     """Comprueba que una cadena contenga únicamente números."""
+   
     return (
         len(cadena_texto) > 0
         and all('0' <= caracter <= '9' for caracter in cadena_texto)
@@ -34,6 +35,7 @@ def validar_correo(correo):
 
     usuario, dominio = correo.split('@')
 
+    # Validar el usuario y el dominio
     if not usuario or usuario.startswith('.') or usuario.endswith('.'):
         return False
 
