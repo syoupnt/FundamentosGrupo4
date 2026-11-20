@@ -3,8 +3,11 @@ from colores import BLUE, BRIGHT, CYAN, GREEN, RED, RESET, YELLOW
 from expedientes import (
     actualizar_estado,
     buscar_expediente,
+    consultar_notificaciones,
+    derivar_expediente,
     generar_reporte,
     listar_expedientes,
+    registrar_observacion,
     registrar_tramite,
 )
 
@@ -29,8 +32,11 @@ def main():
         print(BLUE + "2. Buscar expediente" + RESET)
         print(CYAN + "3. Listar expedientes" + RESET)
         print(YELLOW + "4. Actualizar estado del trámite" + RESET)
-        print(GREEN + "5. Generar reporte diario" + RESET)
-        print(RED + "6. Salir del sistema" + RESET)
+        print(BLUE + "5. Derivar documentos a un área" + RESET)
+        print(RED + "6. Registrar observación" + RESET)
+        print(GREEN + "7. Ver notificaciones al ciudadano" + RESET)
+        print(CYAN + "8. Generar reporte diario" + RESET)
+        print(RED + "9. Salir del sistema" + RESET)
 
         opcion = input(YELLOW + "\nSeleccione una opción: " + RESET).strip()
 
@@ -48,11 +54,20 @@ def main():
                 actualizar_estado(expedientes)
 
             case "5":
-                generar_reporte(expedientes)
+                derivar_expediente(expedientes)
 
             case "6":
+                registrar_observacion(expedientes)
+
+            case "7":
+                consultar_notificaciones(expedientes)
+
+            case "8":
+                generar_reporte(expedientes)
+
+            case "9":
                 continuar = False
                 print(GREEN + "Gracias por utilizar el sistema." + RESET)
 
             case _:
-                print(RED + "Opción no válida. Seleccione del 1 al 6." + RESET)
+                print(RED + "Opción no válida. Seleccione del 1 al 9." + RESET)
