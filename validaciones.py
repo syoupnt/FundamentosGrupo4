@@ -11,6 +11,7 @@ def es_solo_numeros(cadena_texto):
 
 def validar_dni(dni):
     """El DNI debe contener exactamente 8 dígitos."""
+    
     return len(dni) == 8 and es_solo_numeros(dni)
 
 
