@@ -3,7 +3,7 @@ import re
 # es solo numeros
 def es_solo_numeros(cadena_texto):
     """Comprueba que una cadena contenga únicamente números."""
-   
+    
     return (
         len(cadena_texto) > 0
         and all('0' <= caracter <= '9' for caracter in cadena_texto)
