@@ -144,20 +144,27 @@ def mostrar_detalle(registro):
     print(BLUE + "-------------------------------" + RESET)
 
 
-def buscar_registros(expedientes, criterio):
+def buscar_registros(expedientes, criterio, indice=0):
     """
     Devuelve los expedientes que coinciden
     con el código o con el DNI ingresado.
+
+    Recorre la lista de forma recursiva: procesa
+    el registro en `indice` y llama a sí misma
+    con el siguiente, hasta llegar al final.
     """
+    if indice >= len(expedientes):
+        return []
+
+    registro = expedientes[indice]
     criterio = criterio.strip().lower()
-    encontrados = []
+    encontrados = buscar_registros(expedientes, criterio, indice + 1)
 
-    for registro in expedientes:
-        codigo = registro.get("expediente", "").lower()
-        dni = registro.get("dni", "")
+    codigo = registro.get("expediente", "").lower()
+    dni = registro.get("dni", "")
 
-        if criterio == codigo or criterio == dni:
-            encontrados.append(registro)
+    if criterio == codigo or criterio == dni:
+        encontrados.insert(0, registro)
 
     return encontrados
 
