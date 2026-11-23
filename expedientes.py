@@ -20,6 +20,16 @@ ESTADOS = [
 ]
 
 
+AREAS_RESPONSABLES = [
+    "Área de Administración",
+    "Área de Atención al Ciudadano",
+    "Área de Identificación Civil",
+    "Área Jurídica",
+    "Área de Recursos Humanos",
+    "Área de Tecnologías de la Información"
+]
+
+
 def generar_codigo_expediente(expedientes):
     """
     Genera códigos correlativos según el año actual.
@@ -123,16 +133,23 @@ def mostrar_detalle(registro):
     print("Trámite:", registro.get("tipo_tramite", ""))
     print("Fecha:", registro.get("fecha_hora", ""))
     print("Estado:", registro.get("estado", ""))
+
+    if registro.get("area_responsable"):
+        print("Área responsable:", registro.get("area_responsable"))
+
+    if registro.get("observacion"):
+        print("Observación:", registro.get("observacion"))
+
+    print("Notificaciones:", len(registro.get("notificaciones", [])))
     print(BLUE + "-------------------------------" + RESET)
 
 
-def buscar_expediente(expedientes):
-    print(BRIGHT + CYAN + "\n=== CONSULTA DE EXPEDIENTES ===" + RESET)
-
-    criterio = pedir_texto(
-        "Ingrese el código del expediente o el DNI: "
-    ).lower()
-
+def buscar_registros(expedientes, criterio):
+    """
+    Devuelve los expedientes que coinciden
+    con el código o con el DNI ingresado.
+    """
+    criterio = criterio.strip().lower()
     encontrados = []
 
     for registro in expedientes:
@@ -141,6 +158,18 @@ def buscar_expediente(expedientes):
 
         if criterio == codigo or criterio == dni:
             encontrados.append(registro)
+
+    return encontrados
+
+
+def buscar_expediente(expedientes):
+    print(BRIGHT + CYAN + "\n=== CONSULTA DE EXPEDIENTES ===" + RESET)
+
+    criterio = pedir_texto(
+        "Ingrese el código del expediente o el DNI: "
+    )
+
+    encontrados = buscar_registros(expedientes, criterio)
 
     if not encontrados:
         print(RED + "No se encontraron expedientes." + RESET)
@@ -174,16 +203,13 @@ def actualizar_estado(expedientes):
 
     codigo = pedir_texto("Ingrese código de expediente: ").upper()
 
-    registro_encontrado = None
+    encontrados = buscar_registros(expedientes, codigo)
 
-    for registro in expedientes:
-        if registro.get("expediente", "").upper() == codigo:
-            registro_encontrado = registro
-            break
-
-    if registro_encontrado is None:
+    if not encontrados:
         print(RED + "Expediente no encontrado." + RESET)
         return
+
+    registro_encontrado = encontrados[0]
 
     print("Estados disponibles:")
 
@@ -196,14 +222,192 @@ def actualizar_estado(expedientes):
         print(RED + "Opción de estado no válida." + RESET)
         return
 
+    nuevo_estado = ESTADOS[opcion - 1]
     estado_anterior = registro_encontrado["estado"]
-    registro_encontrado["estado"] = ESTADOS[opcion - 1]
+
+    if nuevo_estado == estado_anterior:
+        print(YELLOW + "El expediente ya se encuentra en ese estado." + RESET)
+        return
+
+    registro_encontrado["estado"] = nuevo_estado
+    notificacion = crear_notificacion(registro_encontrado, estado_anterior, "")
 
     if guardar_expedientes(expedientes):
+        mostrar_notificacion(registro_encontrado, notificacion)
         print(GREEN + "Estado actualizado correctamente." + RESET)
+        return
+
+    registro_encontrado["estado"] = estado_anterior
+    descartar_notificacion(registro_encontrado, notificacion)
+    print(RED + "No se pudo guardar el cambio." + RESET)
+
+
+def crear_notificacion(registro, estado_anterior, motivo):
+    """
+    Agrega al expediente el mensaje que se mostrará
+    al ciudadano cuando cambie el estado de su trámite.
+    """
+    codigo = registro.get("expediente", "")
+    estado_actual = registro.get("estado", "")
+    fecha_hora = datetime.now().astimezone().isoformat(timespec="seconds")
+
+    if estado_anterior == estado_actual:
+        mensaje = f"Su expediente {codigo} mantiene el estado {estado_actual}."
     else:
-        registro_encontrado["estado"] = estado_anterior
-        print(RED + "No se pudo guardar el cambio." + RESET)
+        mensaje = (
+            f"Su expediente {codigo} cambió de estado: "
+            f"{estado_anterior} -> {estado_actual}."
+        )
+
+    if motivo:
+        mensaje += f" {motivo}"
+
+    notificacion = {
+        "fecha_hora": fecha_hora,
+        "mensaje": mensaje
+    }
+
+    registro.setdefault("notificaciones", []).append(notificacion)
+
+    return notificacion
+
+
+def mostrar_notificacion(registro, notificacion):
+    """Muestra el aviso que recibiría el ciudadano."""
+    print(BRIGHT + GREEN + "\n=== NOTIFICACIÓN AL CIUDADANO ===" + RESET)
+    print("Para:", registro.get("nombre", ""), "| DNI:", registro.get("dni", ""))
+    print("Correo:", registro.get("correo", ""))
+    print("Celular:", registro.get("telefono", ""))
+    print("Asunto: Estado de su expediente", registro.get("expediente", ""))
+    print("Mensaje:", notificacion.get("mensaje", ""))
+    print(GREEN + "===================================" + RESET)
+
+
+def descartar_notificacion(registro, notificacion):
+    """Elimina la notificación cuando no se pudo guardar el cambio."""
+    notificaciones = registro.get("notificaciones", [])
+
+    if notificacion in notificaciones:
+        notificaciones.remove(notificacion)
+
+
+def derivar_expediente(expedientes):
+    print(BRIGHT + CYAN + "\n=== DERIVAR DOCUMENTOS A UN ÁREA ===" + RESET)
+
+    codigo = pedir_texto("Ingrese código de expediente: ").upper()
+
+    encontrados = buscar_registros(expedientes, codigo)
+
+    if not encontrados:
+        print(RED + "Expediente no encontrado." + RESET)
+        return
+
+    registro = encontrados[0]
+
+    print("Áreas disponibles:")
+
+    for indice, area in enumerate(AREAS_RESPONSABLES, start=1):
+        print(f"{indice}. {area}")
+
+    opcion = pedir_entero_positivo("Seleccione el área responsable: ")
+
+    if opcion < 1 or opcion > len(AREAS_RESPONSABLES):
+        print(RED + "Opción de área no válida." + RESET)
+        return
+
+    area = AREAS_RESPONSABLES[opcion - 1]
+    estado_anterior = registro["estado"]
+    registro["estado"] = "Derivado"
+    registro["area_responsable"] = area
+    notificacion = crear_notificacion(
+        registro,
+        estado_anterior,
+        f"Área responsable: {area}."
+    )
+
+    if guardar_expedientes(expedientes):
+        mostrar_notificacion(registro, notificacion)
+        print(GREEN + "Expediente derivado correctamente." + RESET)
+        return
+
+    registro["estado"] = estado_anterior
+    registro.pop("area_responsable", None)
+    descartar_notificacion(registro, notificacion)
+    print(RED + "No se pudo guardar la derivación." + RESET)
+
+
+def registrar_observacion(expedientes):
+    print(BRIGHT + CYAN + "\n=== REGISTRAR OBSERVACIÓN ===" + RESET)
+
+    codigo = pedir_texto("Ingrese código de expediente: ").upper()
+
+    encontrados = buscar_registros(expedientes, codigo)
+
+    if not encontrados:
+        print(RED + "Expediente no encontrado." + RESET)
+        return
+
+    registro = encontrados[0]
+
+    detalle = pedir_texto("Documento o requisito faltante: ")
+
+    estado_anterior = registro["estado"]
+    registro["estado"] = "Observado"
+    registro["observacion"] = detalle
+    registro["fecha_observacion"] = (
+        datetime.now().astimezone().isoformat(timespec="seconds")
+    )
+    notificacion = crear_notificacion(
+        registro,
+        estado_anterior,
+        f"Falta el siguiente requisito: {detalle}."
+    )
+
+    if guardar_expedientes(expedientes):
+        mostrar_notificacion(registro, notificacion)
+        print(GREEN + "Observación registrada correctamente." + RESET)
+        return
+
+    registro["estado"] = estado_anterior
+    registro.pop("observacion", None)
+    registro.pop("fecha_observacion", None)
+    descartar_notificacion(registro, notificacion)
+    print(RED + "No se pudo guardar la observación." + RESET)
+
+
+def consultar_notificaciones(expedientes):
+    print(BRIGHT + CYAN + "\n=== NOTIFICACIONES AL CIUDADANO ===" + RESET)
+
+    criterio = pedir_texto(
+        "Ingrese el código del expediente o el DNI: "
+    )
+
+    encontrados = buscar_registros(expedientes, criterio)
+
+    if not encontrados:
+        print(RED + "No se encontraron expedientes." + RESET)
+        return
+
+    for registro in encontrados:
+        notificaciones = registro.get("notificaciones", [])
+
+        print(BLUE + "\n---------- NOTIFICACIONES ----------" + RESET)
+        print("Expediente:", registro.get("expediente", ""))
+        print("Ciudadano:", registro.get("nombre", ""))
+        print("Correo:", registro.get("correo", ""))
+
+        if not notificaciones:
+            print(YELLOW + "Todavía no hay notificaciones." + RESET)
+
+        for notificacion in notificaciones:
+            print(
+                "-",
+                notificacion.get("fecha_hora", ""),
+                "|",
+                notificacion.get("mensaje", "")
+            )
+
+        print(BLUE + "-------------------------------------" + RESET)
 
 
 def generar_reporte(expedientes):
