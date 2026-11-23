@@ -42,6 +42,7 @@ def validar_correo(correo):
     partes_dominio = dominio.split('.')
 
     if len(partes_dominio) < 2:
+        
         return False
 
     if any(not parte for parte in partes_dominio):
