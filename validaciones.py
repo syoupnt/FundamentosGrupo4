@@ -36,8 +36,6 @@ def tiene_un_arroba(correo: str) -> bool:
             posicion = indice
 
     return cantidad == 1 and 0 < posicion < len(correo) - 1
-    """Comprueba que exista exactamente un símbolo @."""
-    return correo.count('@') == 1
 
 
 def validar_correo(correo):
