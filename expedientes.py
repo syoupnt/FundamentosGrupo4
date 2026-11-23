@@ -47,6 +47,7 @@ def generar_codigo_expediente(expedientes):
 
 def registrar_tramite(expedientes):
     print(BRIGHT + CYAN + "\n=== REGISTRO DE NUEVO TRÁMITE ===" + RESET)
+    
 
     while True:
         dni = input(YELLOW + "Ingrese DNI (8 dígitos): " + RESET).strip()
