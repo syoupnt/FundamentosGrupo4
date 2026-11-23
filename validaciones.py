@@ -28,7 +28,7 @@ def validar_correo(correo):
     correo = correo.strip()
 
     if not tiene_un_arroba(correo):
-        return False
+        return 
 
     if ' ' in correo or '..' in correo:
         return False
@@ -69,3 +69,4 @@ def validar_nombre(nombre):
         len(nombre.strip()) >= 3
         and not any(caracter.isdigit() for caracter in nombre)
     )
+False
