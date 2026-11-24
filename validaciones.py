@@ -15,9 +15,27 @@ def validar_dni(dni):
     return len(dni) == 8 and es_solo_numeros(dni)
 
 
-def tiene_un_arroba(correo):
-    """Comprueba que exista exactamente un símbolo @."""
-    return correo.count('@') == 1
+def tiene_un_arroba(correo: str) -> bool:
+    """
+    Comprueba que exista exactamente un '@' y que no esté en los extremos.
+    Parámetros:
+        correo (str): Cadena de correo ingresada por el usuario.
+    Retorna:
+        bool: True si cumple el formato básico, False si no.
+    """
+    if not isinstance(correo, str):
+        return False
+
+    correo = correo.strip()
+    cantidad = 0
+    posicion = -1
+
+    for indice, caracter in enumerate(correo):
+        if caracter == '@':
+            cantidad += 1
+            posicion = indice
+
+    return cantidad == 1 and 0 < posicion < len(correo) - 1
 
 
 def validar_correo(correo):

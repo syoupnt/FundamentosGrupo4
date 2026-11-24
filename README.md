@@ -6,7 +6,7 @@ Este repositorio contiene una pequeña aplicación en Python para simular el reg
 
 - `main.py`: punto de entrada del programa
 - `menu.py`: menú principal y control de opciones
-- `expedientes.py`: registro, consulta, actualización y reportes
+- `expedientes.py`: registro, consulta, derivación, observaciones, notificaciones, actualización y reportes
 - `validaciones.py`: validación de DNI, teléfono, correo y nombre
 - `entradas.py`: solicitudes seguras por consola
 - `almacenamiento.py`: carga y guardado de expedientes en JSON
@@ -21,6 +21,13 @@ Este repositorio contiene una pequeña aplicación en Python para simular el reg
 ```bash
 python main.py
 ```
+
+## Funcionalidades
+
+1. Registrar un nuevo trámite y generar el cargo digital del ciudadano.
+2. Derivar documentos: permite enviar un expediente a un área responsable.
+3. Registrar observaciones: permite indicar si falta algún documento o requisito.
+4. Notificar al ciudadano: se muestra un mensaje cuando cambia el estado de su expediente.
 
 ## Pseudocódigo
 
