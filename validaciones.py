@@ -1,5 +1,6 @@
 import re
 
+
 # es solo numeros
 def es_solo_numeros(cadena_texto):
     """Comprueba que una cadena contenga únicamente números."""
