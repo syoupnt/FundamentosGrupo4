@@ -16,6 +16,10 @@ def generar_reporte(expedientes):
 def listar_expedientes(expedientes):
     pass
 
+#################################
+#         Deyvis Marcos         #
+#################################
+
 import validaciones
 import entradas
 import datetime
