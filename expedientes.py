@@ -120,7 +120,5 @@ def buscar_registros(expedientes, criterio, indice=0):
     return encontrados
 
 
-cargar = almacenamiento.cargar_expedientes()
-registrar_observacion(cargar)
 
 
