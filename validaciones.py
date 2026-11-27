@@ -24,20 +24,19 @@ def tiene_un_arroba(correo: str) -> bool:
     Retorna:
         bool: True si cumple el formato básico, False si no.
     """
-    if not isinstance(correo, str):
+    if not isinstance(correo, str): #verifica que el correo sea una cadena de texto
         return False
 
     correo = correo.strip()
     cantidad = 0
-    posicion = -1
+   
 
     for indice, caracter in enumerate(correo):
         if caracter == '@':
             cantidad += 1
-            posicion = indice
 
-    return cantidad == 1 and 0 < posicion < len(correo) - 1
 
+    return cantidad == 1 
 
 def validar_correo(correo):
     """
@@ -47,9 +46,9 @@ def validar_correo(correo):
     correo = correo.strip()
 
     if not tiene_un_arroba(correo):
-        return 
+        return False
 
-    if ' ' in correo or '..' in correo:
+    if ' ' in correo or '..' in correo: # in comprobar si ese elemento esta en la lista 
         return False
 
     usuario, dominio = correo.split('@')
@@ -67,7 +66,7 @@ def validar_correo(correo):
     if any(not parte for parte in partes_dominio):
         return False
 
-    patron_dominio = r'^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$'
+    patron_dominio = r'^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$' 
 
     for parte in partes_dominio:
         if not re.fullmatch(patron_dominio, parte):
