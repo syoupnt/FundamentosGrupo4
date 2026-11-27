@@ -22,7 +22,7 @@ def cargar_expedientes():
         if not isinstance(datos, list):
             raise ValueError("El contenido JSON debe ser una lista.")
 
-        if not all(isinstance(registro, dict) for registro in datos):
+        if not all(isinstance(registro, list) for registro in datos):
             raise ValueError("Hay registros con una estructura incorrecta.")
 
         return datos
