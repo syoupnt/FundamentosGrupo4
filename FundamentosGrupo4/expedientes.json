@@ -1,0 +1,22 @@
+[
+    {
+        "expediente": "EXP-2026-001",
+        "dni": "61582138",
+        "nombre": "Frank Anderssón Bazan castro",
+        "telefono": "915985836",
+        "correo": "frankbazan857@gmail.com",
+        "tipo_tramite": "documentos",
+        "fecha_hora": "2026-11-20T18:27:08-05:00",
+        "estado": "Recibido"
+    },
+    {
+        "expediente": "EXP-2026-002",
+        "dni": "88787878",
+        "nombre": "jsrri",
+        "telefono": "999999999",
+        "correo": "hhyffkl@gmail.com",
+        "tipo_tramite": "documento",
+        "fecha_hora": "2026-11-22T00:01:33-05:00",
+        "estado": "Recibido"
+    }
+]
